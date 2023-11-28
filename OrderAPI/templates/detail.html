@@ -1,0 +1,12 @@
+{%extends 'base.html '%}
+    {% block content %}
+    <p><b style="color:red;">My Login Form</b></p>
+
+    <form action = "" method = "post", style="background-color: white;">
+        {% csrf_token %}
+        {{ form.as_p}} 
+
+        <input type="submit" value = "submit">
+    </form>
+    <p><a href="http://127.0.0.1:8000/home/view"> VIEW ALL RECORDS</a></p>
+    {% endblock  %}

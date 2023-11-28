@@ -1,0 +1,20 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        {% include "partials/_header.html"%}
+        <h1>These are the Items in the DATABASE oooh<h2>
+        <table style="border:2px solid black;">
+            {%for item in record%}
+                <tr>
+                    <td style="border:1px solid black;">{{item.name}}</td>
+                    <td style="border:1px solid black;">{{item.email}}</td>
+                    <td style="border:1px solid black;">{{item.order_time}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="http://127.0.0.1:8000/home/">MAKE NEW RECORD</a>
+    </body>
+</html>
