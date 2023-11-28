@@ -31,7 +31,7 @@ class AllSerializer(serializers.ModelSerializer):
     place = PlaceSerializer(read_only = True)
     class Meta:
         model = Logger
-        fields = ['id', 'name','email','address','status','time',"alternate", "place"]
+        fields = ['id', 'name','email','address','age','status','time',"alternate", "place"]
         depth = 1
         #Create alternate key id
     def alt_ID(self, lid:Logger):

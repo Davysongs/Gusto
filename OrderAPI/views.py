@@ -67,15 +67,22 @@ class Single(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
 
 #DeSerializer lesson 
 @api_view(['GET', 'POST'])
-@renderer_classes([TemplateHTMLRenderer])
+#@renderer_classes([TemplateHTMLRenderer])
 def all(request):
     if request.method == 'GET':
         items = Logger.objects.select_related('place').all()
+
+        #search for items using query
         place_name = request.query_params.get('place')
         to_age = request.query_params.get('to_age')
+        if place_name:
+            items = items.filter(place__title = place_name)
+        if to_age:
+            items = items.filter(to__lte = to_age)
         serialized_item = AllSerializer(items, many=True)
         return Response(serialized_item.data, status = status.HTTP_200_OK) 
         #return Response({'data':serialized_item.data}, template_name='/dat.html')
+
     elif request.method == 'POST':
         serialized_item = AllSerializer(data=request.data)
         serialized_item.is_valid(raise_exception=True)
