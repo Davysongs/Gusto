@@ -74,12 +74,15 @@ def all(request):
 
         #search for items using query
         place_name = request.query_params.get('place')
-        to_age = request.query_params.get('to_age')
+        to_age = request.query_params.get('age')
+        search = request.query_params.get('search')
         if place_name:
-            items = items.filter(place__title = place_name)
+            items = items.filter(place__slug = place_name)
         if to_age:
-            items = items.filter(to__lte = to_age)
+            items = items.filter(age = to_age)
         serialized_item = AllSerializer(items, many=True)
+        if search:
+            items = items.filter(name__istartswith = search)
         return Response(serialized_item.data, status = status.HTTP_200_OK) 
         #return Response({'data':serialized_item.data}, template_name='/dat.html')
 
