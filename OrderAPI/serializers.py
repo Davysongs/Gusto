@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Logger, Place
 
+import bleach
 import random
 import string
 class LoggerSerializer(serializers.ModelSerializer):
@@ -29,6 +30,10 @@ class AllSerializer(serializers.ModelSerializer):
     status = serializers.BooleanField(default=True, read_only=False)
     alternate = serializers.SerializerMethodField(method_name = "alt_ID")
     place = PlaceSerializer(read_only = True)
+    def validate_title(self,value):
+        if len(value)>100:
+            raise serializers.ValidationError("Title is too long!")
+        return bleach.clean(value)
     class Meta:
         model = Logger
         fields = ['id', 'name','email','address','age','status','time',"alternate", "place"]

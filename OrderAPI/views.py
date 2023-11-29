@@ -14,6 +14,7 @@ from OrderAPI.forms import LogForm
 #serialize
 from .serializers import AllSerializer
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator, EmptyPage
 
 
 
@@ -76,13 +77,25 @@ def all(request):
         place_name = request.query_params.get('place')
         to_age = request.query_params.get('age')
         search = request.query_params.get('search')
+        ordering = request.query_params.get('ordering')
+        perpage = request.query_params.get('perpage', default = 2)
+        page = request.query_params.get('page', default = 1)
         if place_name:
             items = items.filter(place__slug = place_name)
         if to_age:
             items = items.filter(age = to_age)
-        serialized_item = AllSerializer(items, many=True)
         if search:
             items = items.filter(name__istartswith = search)
+        if ordering:
+            ordering_fields = ordering.split(",")
+            items = items.order_by(*ordering_fields)
+
+        paginator  = Paginator(items, per_page=perpage)
+        try:
+            items = paginator.page(number=page)
+        except EmptyPage:
+            items=[]
+        serialized_item = AllSerializer(items, many=True)
         return Response(serialized_item.data, status = status.HTTP_200_OK) 
         #return Response({'data':serialized_item.data}, template_name='/dat.html')
 
