@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'OrderAPI',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'debug_toolbar',
+    'rest_framework.authtoken',
+    'djoser',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'OrderAPI',
+    'Product',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +88,7 @@ DATABASES = {
         'NAME': 'gustodb',
         'USER': 'root',
         'PASSWORD': '#$(tVA0nr)',
+
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -140,6 +146,17 @@ REST_FRAMEWORK = {
         'rest_framework_xml.renderers.XMLRenderer',
         'rest_framework_yaml.renderers.YAMLRenderer',
         'rest_framework_csv.renderers.CSVRenderer',
-
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_THROTTLE_RATES':{
+        'anon':'2/minute',
+        'user':'5/minute',
+    }
+}
+DJOSER = {
+    "USER_ID_FIELD":"username"
 }

@@ -3,7 +3,7 @@ from .models import Logger
 #rest framework
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, renderer_classes,permission_classes, throttle_classes
 from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
 #serializer
@@ -15,7 +15,10 @@ from OrderAPI.forms import LogForm
 from .serializers import AllSerializer
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
-
+#Authentifications
+from rest_framework.permissions import IsAuthenticated
+#Throttling
+from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
 
 
 def detail_view(request):
@@ -111,8 +114,34 @@ def one(request, id):
     serialized = AllSerializer(item)
     return Response(serialized.data)
 
-    
+#Authentication
+@api_view()
+@permission_classes([IsAuthenticated])
+def secret(request):
+    return Response({"message":"This message is a secret"})
 
-            
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def manager(request):
+    #check if an authenticated user belongs to a group (MANAGER)
+    if request.user.groups.filter(name='Manager').exists():
+        return Response({"message":"This message is for the manager only"})
+    else:
+        return Response({"message":"You are not authorised to view this"}, status.HTTP_403_FORBIDDEN)
+
+#Throttling
+
+@api_view()
+@throttle_classes([AnonRateThrottle])
+def throttle(request):
+    return Response({"message":"Throttle Success"})
+ #for logged in users
+@api_view()
+@permission_classes([IsAuthenticated])
+@throttle_classes([UserRateThrottle])
+def throttle_user(request):
+    return Response({"message":"Throttle Success for users only"})
+
 
     

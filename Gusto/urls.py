@@ -17,11 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
 
 urlpatterns = [
     path('', views.home),
     path('admin/', admin.site.urls),
+    path('new/', include('Product.urls')),
     path('home/', include ('OrderAPI.urls')),
-    path('new', views.index),
-    path('__debug__/', include("debug_toolbar.urls"))
+    path('new', views.home),
+    path('__debug__/', include("debug_toolbar.urls")),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh', TokenRefreshView.as_view, name='token_refresh'),
+    path('api/token/blacklist', TokenBlacklistView.as_view, name='token_blacklist'),
 ]

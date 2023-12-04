@@ -1,0 +1,23 @@
+<!-- search_results.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <!-- search_form.html -->
+    <form method="GET">
+        <input type="text" name="q" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+    <h1>Search Results for "{{ query }}"</h1>
+    <ul>
+        {% for product in results %}
+            <li>{{ product.name }}</li>
+            <li>{{product.email}}</li> <!-- Display relevant fields of the Product model -->
+        {% empty %}
+            <li>No results found</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

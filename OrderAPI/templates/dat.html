@@ -4,22 +4,36 @@
     <meta charset="UTF-8">
     <title>Menu Items</title>
 </head>
-<body>
-    <table width="100%" style="text-align: left;">
-        <tr>
-            <th>Item</th> <!-- item column heading -->
-            <th>Price</th> <!-- price column heading -->
-            <th>Price After Tax</th> <!-- price after tax column heading -->
-            <th>Stock</th> <!-- stock column heading -->
-        </tr>
-        {% for item in data %}
-        <tr>
-            <td>{{ item.name}}</td>
-            <td>{{ item.email}}</td>
-            <td>{{ item.order_time }}</td>
-            <td>{{ item.address }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
+    <body>
+        <!-- search_form.html -->
+        <form action="{% url 'display' %}" method="GET">
+            <input type="text" name="q" placeholder="Search...">
+            <button type="submit">Search</button>
+        </form>
+        
+        <h1>Search Results for "{{ query }}"</h1>
+        <ul>
+            {% for product in results %}
+                <li>{{ product.name }}</li> <!-- Display relevant fields of the Product model -->
+            {% empty %}
+                <li>No results found</li>
+            {% endfor %}
+        </ul>
+        <table width="100%" style="text-align: left;">
+            <tr>
+                <th>Item</th> <!-- item column heading -->
+                <th>Price</th> <!-- price column heading -->
+                <th>Price After Tax</th> <!-- price after tax column heading -->
+                <th>Stock</th> <!-- stock column heading -->
+            </tr>
+            {% for item in data %}
+            <tr>
+                <td>{{ item.name}}</td>
+                <td>{{ item.email}}</td>
+                <td>{{ item.order_time }}</td>
+
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
 </html>
